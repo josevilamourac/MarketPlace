@@ -1,0 +1,100 @@
+/* Global styles */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff; /* White */
+}
+
+
+.container {
+    display: flex;
+    flex-direction: row; /* Set the container to a row layout */
+    justify-content: space-between; /* Space items evenly along the main axis */
+    min-height: 100vh; /* Ensure container stretches to the full height of the viewport */
+}
+
+
+/* Navigation styles */
+nav {
+    width: 180px; /* Adjust as needed */
+    background-color: #d1d1d1; /* Slightly darker grey */
+    padding: 20px;
+}
+
+li {
+    list-style: none;
+    text-decoration: none;
+}
+
+a {
+
+    text-decoration: none;
+}
+
+/* Main content styles */
+
+main {
+    width: 80%; /* Adjust the width as needed */
+    margin: 20px auto; /* Center the main content horizontally and add margin at the top and bottom */
+    flex-grow: 1; /* Allow main content to grow to fill remaining space */
+    padding: 20px;
+    max-width: 1000px; /* Limit the maximum width to prevent it from becoming too wide on larger screens */
+    text-align: -webkit-center;
+}
+
+
+/* Header styles */
+header {
+    background-color: #002147; /* Dark blue */
+    color: white; /* Text color */
+    padding: 20px;
+}
+
+/* Footer styles */
+footer {
+    background-color: #f8f9fa; /* Soft grey */
+    color: #333; /* Dark grey */
+    text-align: center;
+    padding: 10px;
+    margin-top: auto; /* Align footer to the bottom of the container */
+}
+
+/* Button styles */
+.btn,
+form button {
+    background-color: #0073e6; /* Original blue color */
+    color: white; /* Text color */
+    padding: 10px 20px; /* Adjust padding as needed */
+    text-decoration: none; /* Remove underline from links */
+    border-radius: 5px; /* Add rounded corners */
+    margin-bottom: 20px; /* Add margin between buttons */
+    margin-top: 20px; /* Add margin to the top of buttons */
+}
+
+.btn:hover,
+form button:hover {
+    background-color: #005aa6; /* Darker blue color on hover */
+}
+/* Header image styles */
+/* Header styles */
+.header {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Header image styles */
+.header-image {
+    width: 100px; /* Adjust the width as needed */
+    height: auto; /* Maintain aspect ratio */
+    margin-right: 20px; /* Add some space between the image and text */
+    margin-left: 20px;
+}
+
+/* Header title styles */
+.header-title {
+    margin: 0;
+}
