@@ -18,5 +18,9 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('loja/<int:store_id>/add_product/', views.add_product, name='add_product'),  # URL para adicionar produtos
     path('home/select_store/', views.select_store, name='select_store'),
+    path('add_product/', views.add_product, name='add_product'),
+    path('registo_user/', views.registo_user, name='registo_user'),
+    path('registo_admin/', views.registo_admin, name='registo_admin'),
+    path('registo_loja/', views.registo_loja, name='registo_loja'),
 
 ]
