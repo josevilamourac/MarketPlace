@@ -1,0 +1,48 @@
+{% extends "./index.html" %}
+
+{% block header %}
+    <header class="py-5">
+        <div class="container px-lg-5">
+            <div class="p-4 p-lg-5 bg-light rounded-3 text-center">
+                <div class="m-4 m-lg-5">
+
+                    <div class="container  px-lg-5">
+                        <div class="card bg-light border-0 h-100">
+                            <h2 class="text-center mb-4">Your Profile</h2>
+                            <div class="text-center">
+                                <img src="default-avatar.jpg" alt="Profile Picture" class="profile-img">
+                                <input type="file" id="profile-image" accept="image/*">
+                            </div>
+                            <div class="form-group mt-4">
+                                <label for="username">Username</label>
+                                <input type="text" class="form-control textarea" id="username"
+                                       placeholder="Enter your username">
+                            </div>
+                            <button type="button" class="btn btn-primary btn-lg " onclick="updateProfile()">Update
+                                Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Bootstrap JS (optional) -->
+
+
+    <!-- Custom JavaScript -->
+    <script>
+        function updateProfile() {
+            var username = document.getElementById('username').value;
+            // Get the selected image file
+            var image = document.getElementById('profile-image').files[0];
+
+            // Perform actions to update profile, for example:
+            // Send data to server via AJAX
+            console.log("Username: " + username);
+            console.log("Image: ", image);
+        }
+    </script>
+
+{% endblock %}
