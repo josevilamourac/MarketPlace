@@ -16,4 +16,6 @@ urlpatterns = [
     path('loja/', views.loja, name='loja'),
     path('logout/', views.logout, name='logout'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('add_product/', views.add_product, name='add_product'),  # URL para adicionar produtos
+
 ]
