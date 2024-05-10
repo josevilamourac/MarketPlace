@@ -1,0 +1,16 @@
+{% extends "./index.html" %}
+
+{% block header %}
+    <div class="container px-lg-5">
+        <div class="card bg-light border-0 h-100 p-4">
+
+            <h1 class="display-4">Registo User</h1>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{form_user.as_p}}
+                {{form_cliente.as_p}}
+                <button type="submit" class="btn btn-primary">Registo User</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
