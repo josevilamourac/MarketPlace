@@ -17,13 +17,12 @@ def perfil(request):
 def carrinho(request):
     return render (request, 'MarketPlace/carrinho.html')
 def loja(request):
-    return render (request, 'MarketPlace/loja.html')
+    lojas = Loja.objects.all()  # Query all stores from your database
+    return render(request, 'MarketPlace/loja.html', {'lojas': lojas})
 def logout(request):
     return render (request, 'MarketPlace/logout.html')
 def dashboard(request):
     return render (request, 'MarketPlace/dashboard.html')
 
 
-def minha_view(request):
-    lojas = Loja.objects.all()  # Query all stores from your database
-    return render(request, 'seu_template.html', {'lojas': lojas})
+
