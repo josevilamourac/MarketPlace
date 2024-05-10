@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("marketplaceAPP/", include('MarketPlaceAPP.urls')),
+    path('marketplaceAPP/', include('MarketPlaceAPP.urls', namespace='marketplace')),
 ]
 
 # Serve media files during development

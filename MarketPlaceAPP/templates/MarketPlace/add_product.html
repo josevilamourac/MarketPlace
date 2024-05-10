@@ -5,9 +5,9 @@
         <div class="card bg-light border-0 h-100 p-4">
 
             <h1 class="display-4">Adicionar Produto</h1>
-            <form method="post" enctype="multipart/form-data">
+              <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ form.as_p }}
+                {{ form.as_p }}  <!-- Certifique-se de usar o método as_p para renderizar os campos do formulário -->
                 <button type="submit" class="btn btn-primary">Adicionar Produto</button>
             </form>
         </div>
