@@ -1,9 +1,15 @@
 {% extends "./index.html" %}
+
 {% block header %}
-    <h1>Add Product</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Add Product">
-    </form>
+    <div class="container px-lg-5">
+        <div class="card bg-light border-0 h-100 p-4">
+
+            <h1 class="display-4">Adicionar Produto</h1>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Adicionar Produto</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}

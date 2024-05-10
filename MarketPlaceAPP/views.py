@@ -42,7 +42,7 @@ def add_product(request):
 
             # Cria a pasta da loja, se ainda não existir
             store_folder = os.path.join('media', 'store_images', str(request.user.loja.id))
-            os.makedirs(store_folder, exist_ok=True)
+            os.makedirs(store_folder, exist_ok=True )
 
             # Move a imagem do produto para a pasta da loja
             product_image_path = os.path.join('media', str(product.imagem))
