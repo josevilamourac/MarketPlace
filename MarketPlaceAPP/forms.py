@@ -21,7 +21,17 @@ class UserRegistoForm(UserCreationForm):
 class UserForm(forms.ModelForm):
     class Meta:
         model = UserPerfil
-        fields = ['user', 'telefone']
+        fields = ['telefone']  # Removed 'user' from the fields
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in this.fields:
+            self.fields[field].widget.attrs.update({'class': 'form-control'})
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = UserPerfil
+        fields = ['telefone']  # Removed 'user' from the fields
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -31,7 +41,7 @@ class UserForm(forms.ModelForm):
 class LojaForm(forms.ModelForm):
     class Meta:
         model = Loja
-        fields = ['user', 'telefone', 'endereco', 'descricao', 'imagem']
+        fields = ['telefone', 'endereco', 'descricao', 'imagem']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

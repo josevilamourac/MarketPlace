@@ -3,14 +3,43 @@
 {% block header %}
     <div class="container px-lg-5">
         <div class="card bg-light border-0 h-100 p-4">
-
             <h1 class="display-4">Registo Loja</h1>
-            <form method="post" enctype="multipart/form-data">
+            <form method="post" enctype="multipart/form-data" action="{% url 'marketplace:registo_loja' %}">
                 {% csrf_token %}
-                {{form_user.as_p}}
-                {{form_loja.as_p}}
-                <button type="submit" class="btn btn-primary">Registo Loja</button>
+                <div class="form-group">
+                    <label for="id_username">Username:</label>
+                    <input type="text" name="username" id="id_username" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="id_password1">Password:</label>
+                    <input type="password" name="password1" id="id_password1" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="id_password2">Confirm Password:</label>
+                    <input type="password" name="password2" id="id_password2" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="id_email">Email:</label>
+                    <input type="email" name="email" id="id_email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="id_telefone">Telefone:</label>
+                    <input type="text" name="telefone" id="id_telefone" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="id_endereco">Endereço:</label>
+                    <textarea name="endereco" id="id_endereco" class="form-control" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="id_descricao">Descrição:</label>
+                    <textarea name="descricao" id="id_descricao" class="form-control" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="id_imagem">Imagem:</label>
+                    <input type="file" name="imagem" id="id_imagem" class="form-control-file">
+                </div>
+                <button type="submit" class="btn btn-primary">Registar Loja</button>
             </form>
         </div>
     </div>
-{%endblock%}
+{% endblock %}
