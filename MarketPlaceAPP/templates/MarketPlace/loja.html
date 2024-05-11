@@ -110,8 +110,10 @@
 {% endblock %}
 {% block body %}
 {% if request.user.is_authenticated %}
+
     {% if request.user == user_loja %}
         <!-- Conteúdo disponível apenas para usuários associados a esta loja -->
+
 
 
 

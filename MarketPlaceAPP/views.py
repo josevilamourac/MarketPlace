@@ -3,7 +3,7 @@ import os
 
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
@@ -18,8 +18,7 @@ from .forms import UserForm, UserRegistoForm, AdminForm, LojaForm
 
 
 from .forms import ProductForm
-from .models import Loja
-
+from .models import Loja, UserPerfil
 
 from MarketPlace import settings
 from .models import Loja, Product
@@ -187,35 +186,89 @@ def registo_admin(request):
     return render(request, 'MarketPlace/registo_admin.html', {'form_user': form_user, 'form_admin': form_admin})
 
 def registo_loja(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password1 = request.POST.get('password1')
-        password2 = request.POST.get('password2')
-        email = request.POST.get('email')
-        telefone = request.POST.get('telefone')
-        endereco = request.POST.get('endereco')
-        descricao = request.POST.get('descricao')
-        imagem = request.FILES.get('imagem')  # Para campos de arquivo, use request.FILES
+    if request.user.is_authenticated:
+        # Verifique se o perfil do usuário existe
+        if hasattr(request.user, 'userperfil'):
+            # Verifique se o usuário é um gerente
+            if request.user.userperfil.is_manager:
+                if Loja.objects.filter(user=request.user).exists():
+                    messages.error(request, 'Este usuário já possui uma loja.')
+                    return redirect('marketplace:registo_loja')
+                if request.method == 'POST':
+                    descricao = request.POST.get('descricao')
+                    imagem = request.FILES.get('imagem')
+                    telefone = request.POST.get('telefone')  # Use request.POST.get() for non-file fields
+                    endereco = request.POST.get('endereco')  # Use request.POST.get() for non-file fields
 
-        # Verificar se o usuário já possui uma loja
-        if Loja.objects.filter(user__username=username).exists():
-            messages.error(request, 'Este usuário já possui uma loja.')
-            return redirect('MarketPlace:registo_loja')
+                    print("Encontrou perfil e vai criar loja!")
 
-        # Crie o usuário
-        user = User.objects.create_user(username=username, email=email, password=password1)
+                    loja = Loja.objects.create(
+                        telefone=telefone,
+                        endereco=endereco,
+                        descricao=descricao,
+                        user=request.user,
+                        imagem=imagem
+                    )
+                    messages.success(request, 'Loja criada!.')
+                    return redirect('marketplace:home')
 
-        # Salve os detalhes da loja
-        loja = Loja.objects.create(user=user, telefone=telefone, endereco=endereco, descricao=descricao, imagem=imagem)
 
-        # Faça a autenticação e redirecione
-        user = authenticate(username=username, password=password1)
-        if user is not None:
-            login(request, user)
-            messages.success(request, 'Login efetuado com sucesso!.')
-            return redirect('marketplace:home')
+                return render(request, 'MarketPlace/registo_loja.html')
 
-    return render(request, 'MarketPlace/registo_loja.html')
+
+
+            else:
+                # O usuário não é um gerente
+                # Redirecione ou retorne uma resposta proibida
+                return HttpResponseForbidden("Nao tem permissoes!.")
+        else:
+            # O perfil do usuário não está configurado
+            # Redirecione ou retorne uma resposta proibida
+            return HttpResponseForbidden("Nao tem permissoes!")
+    else:
+        # O usuário não está autenticado
+        # Redirecione ou retorne uma resposta proibida
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            password1 = request.POST.get('password1')
+            password2 = request.POST.get('password2')
+            email = request.POST.get('email')
+            telefone = request.POST.get('telefone')
+            endereco = request.POST.get('endereco')
+            descricao = request.POST.get('descricao')
+            imagem = request.FILES.get('imagem')  # Para campos de arquivo, use request.FILES
+
+            # Verificar se o usuário já possui uma loja
+            if Loja.objects.filter(user__username=username).exists():
+                messages.error(request, 'Este usuário já possui uma loja.')
+                return redirect('MarketPlace:registo_loja')
+
+            # Crie o usuário
+            user = User.objects.create_user(username=username, email=email, password=password1)
+
+            perfil = UserPerfil.objects.create(user=user, telefone=telefone, is_manager=True)
+            loja = Loja.objects.create(user=user, telefone=telefone, endereco=endereco, descricao=descricao,
+                                       imagem=imagem)
+
+            # Faça a autenticação e redirecione
+            user = authenticate(username=username, password=password1)
+            if user is not None:
+                login(request, user)
+                messages.success(request, 'Login efetuado com sucesso!.')
+                return redirect('marketplace:home')
+
+        return render(request, 'MarketPlace/registo_loja.html')
+
+
+
+
+
+
+
+
+
+
+
 
 def logout(request):
     auth_logout(request)

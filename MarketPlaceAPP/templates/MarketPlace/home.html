@@ -3,7 +3,6 @@
 {% block body %}
 {% if request.user.is_authenticated %}
 
-
     <div class="container px-lg-5">
 
     <!-- Page Features-->
@@ -16,7 +15,12 @@
             {% endfor %}
     {% endif %}
 
+            {% if user.userperfil.is_manager %}
+                {% if not user.loja_set.exists %} <!-- Verifica se não há nenhuma loja associada ao usuário -->
 
+                    <a href="{% url 'marketplace:registo_loja' %}" class="btn btn-primary">Registar Loja</a>
+                {% endif %}
+            {% endif %}
 
         {% for loja in lojas %}
 
