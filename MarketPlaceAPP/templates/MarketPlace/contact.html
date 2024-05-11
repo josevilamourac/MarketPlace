@@ -13,12 +13,12 @@
 {% endblock %}
 
 {% block body %}
-
+{% load static %}
     <div class="container px-lg-5">
         <div class="row justify-content-center">
             <div class="col-md-3">
                 <div class="card bg-light border-0 h-100 image-card">
-                    <img src="https://via.placeholder.com/150" class="card-img-top" alt="Image 1">
+                    <img src="{% static 'MarketPlace/midea/eduardo.png' %}" class="card-img-top" alt="Image 1">
                     <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
                         <p class="card-text">Eduardo Carrasqueira</p>
                     </div>
@@ -26,7 +26,7 @@
             </div>
             <div class="col-md-3">
                 <div class="card bg-light border-0 h-100 image-card">
-                    <img src="https://via.placeholder.com/150" class="card-img-top" alt="Image 2">
+                    <img src="{% static 'MarketPlace/midea/vilamoura.png' %}" class="card-img-top" alt="Image 2">
                     <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
                         <p class="mb-2">José Vila Moura</p>
                     </div>
@@ -34,7 +34,7 @@
             </div>
             <div class="col-md-3">
                 <div class="card bg-light border-0 h-100 image-card">
-                    <img src="https://via.placeholder.com/150" class="card-img-top" alt="Image 3">
+                    <img src="{% static 'MarketPlace/midea/mariza.png' %}" class="card-img-top" alt="Image 3">
                     <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
                         <p class="card-text">Mariza Buntubwimana</p>
                     </div>
