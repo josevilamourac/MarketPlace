@@ -72,12 +72,26 @@
             <div class="p-4 p-lg-5 bg-light rounded-3 text-center">
                 <div class="m-4 m-lg-5">
 
-                    <h1 class="display-5 fw-bold">Bem Vindo Ao MarketPlaceAPP!</h1>
+                        {% if request.user.is_authenticated %}
+
+                         <h1 class="display-5 fw-bold">Bem Vindo Ao MarketPlaceAPP {{ request.user.username }}!</h1>
+
                     <p class="fs-4">
                         Explore um mundo de produtos incríveis no nosso Marketplace! Registe-se agora para aceder a
                         uma ampla variedade de itens exclusivos. Se tem uma loja, junte-se a nós para alcançar uma
                         audiência global e aumentar as suas vendas. </p>
-                    <a class="btn btn-primary btn-lg" href="{% url 'MarketPlaceAPP:login' %}">Login</a>
+                    <a href="{% url 'marketplace:logout' %}">Logout</a>
+
+                    {% else %}
+                    <h1 class="display-5 fw-bold">Bem Vindo Ao MarketPlaceAPP!</h1>
+
+                    <p class="fs-4">
+                        Explore um mundo de produtos incríveis no nosso Marketplace! Registe-se agora para aceder a
+                        uma ampla variedade de itens exclusivos. Se tem uma loja, junte-se a nós para alcançar uma
+                        audiência global e aumentar as suas vendas. </p>
+                            <a class="btn btn-primary btn-lg" href="{% url 'MarketPlaceAPP:login' %}">Login</a>
+
+                        {% endif %}
 
                 </div>
             </div>

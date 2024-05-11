@@ -1,13 +1,15 @@
 # Create your views here.
 import os
 
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 import os
-
+from django.contrib.auth import logout as auth_logout
+from django.shortcuts import redirect
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -32,9 +34,21 @@ def home(request):
     return render(request, 'MarketPlace/home.html', {'lojas': lojas})
 
 
-def login(request):
-    return render(request, 'MarketPlace/login.html')
 
+def login_user(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('marketplace:home')
+        else:
+            messages.error(request, 'Credenciais inválidas. Por favor, tente novamente.')
+            return render(request, 'marketplace/login.html', {'error_message': 'Credenciais inválidas. Por favor, tente novamente.'})
+
+    return render(request, 'marketplace/login.html')
 
 def contact(request):
     return render(request, 'MarketPlace/contact.html')
@@ -55,8 +69,7 @@ def loja(request, store_id):
     return render(request, 'MarketPlace/loja.html', {'store_id': store_id, 'descricao_loja': descricao_loja, 'produtos_da_loja': produtos_da_loja})
 
 
-def logout(request):
-    return render(request, 'MarketPlace/logout.html')
+
 
 
 def dashboard(request):
@@ -174,18 +187,36 @@ def registo_admin(request):
 
 def registo_loja(request):
     if request.method == 'POST':
-        form_user = UserRegistoForm(request.POST)
-        form_loja = LojaForm(request.POST)
-        if form_user.is_valid() and form_loja.is_valid():
-            user = form_user.save()
-            loja = form_loja.save(commit=False)
-            loja.user = user
-            loja.save()
-            raw_password = form_user.cleaned_data.get('password1')
-            user = authenticate(username=user.username, password=raw_password)
+        username = request.POST.get('username')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        email = request.POST.get('email')
+        telefone = request.POST.get('telefone')
+        endereco = request.POST.get('endereco')
+        descricao = request.POST.get('descricao')
+        imagem = request.FILES.get('imagem')  # Para campos de arquivo, use request.FILES
+
+        # Verificar se o usuário já possui uma loja
+        if Loja.objects.filter(user__username=username).exists():
+            messages.error(request, 'Este usuário já possui uma loja.')
+            return redirect('MarketPlace:registo_loja')
+
+        # Crie o usuário
+        user = User.objects.create_user(username=username, email=email, password=password1)
+
+        # Salve os detalhes da loja
+        loja = Loja.objects.create(user=user, telefone=telefone, endereco=endereco, descricao=descricao, imagem=imagem)
+
+        # Faça a autenticação e redirecione
+        user = authenticate(username=username, password=password1)
+        if user is not None:
             login(request, user)
-            return redirect('MarketPlace:home')
-    else:
-        form_user = UserRegistoForm()
-        form_loja = UserForm()
-    return render(request, 'MarketPlace/registo_loja.html', {'form_user': form_user, 'form_loja':form_loja})
+            messages.success(request, 'Login efetuado com sucesso!.')
+            return redirect('marketplace:home')
+
+    return render(request, 'MarketPlace/registo_loja.html')
+
+def logout(request):
+    auth_logout(request)
+    # Redirecionar para a página de login ou para qualquer outra página que desejar
+    return redirect('marketplace:home')
