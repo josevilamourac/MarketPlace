@@ -53,4 +53,3 @@ class Messagem(models.Model):
 
     def __str__(self):
         return f"{self.sender} -> {self.receiver}: {self.subject}"
-
