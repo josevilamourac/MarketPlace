@@ -17,48 +17,16 @@
                 <button type="submit" class="btn btn-primary btn-lg">Login</button>
             </form>
             <hr>
-            <p class="text-center">Don't have an account? <a href="{% url 'MarketPlaceAPP:home' %}" id="signup-link">Sign up</a></p>
+            <p class="text-center">Don't have an account? <a href="{% url 'MarketPlaceAPP:registo_user' %}" id="signup-link">Sign up as User</a></p>
+            <p class="text-center">Don't have an account? <a href="{% url 'MarketPlaceAPP:registo_loja' %}" id="signup-link">Sign up as Manager</a></p>
+            <p class="text-center">Don't have an account? <a href="{% url 'MarketPlaceAPP:registo_admin' %}" id="signup-link">Sign up as Admin</a></p>
+
         </div>
     </div>
 
-    <!-- Sign Up Form (hidden by default) -->
-    <div class="container  px-lg-5" style="display: none;">
-        <div class="card bg-light border-0 h-100">
-            <h2 class="text-center mb-4">Sign Up</h2>
-            <form>
-                <div class="form-group">
-                    <label for="signup-email">Email address</label>
-                    <input type="email" class="form-control textarea" id="signup-email" placeholder="Enter email">
-                </div>
-                <div class="form-group">
-                    <label for="signup-password">Password</label>
-                    <input type="password" class="form-control textarea" id="signup-password" placeholder="Password">
-                </div>
-                <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
-            </form>
-            <hr>
-            <p class="text-center">Already have an account? <a href="{% url 'MarketPlaceAPP:home' %}" id="login-link">Login</a></p>
-        </div>
-    </div>
+
 </header>
 
-    <!-- Bootstrap JS (optional) -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <!-- Custom JavaScript -->
-    <script>
-        document.getElementById('signup-link').addEventListener('click', function (event) {
-            event.preventDefault();
-            document.querySelector('.login-container').style.display = 'none';
-            document.querySelector('.signup-container').style.display = 'block';
-        });
-
-        document.getElementById('login-link').addEventListener('click', function (event) {
-            event.preventDefault();
-            document.querySelector('.signup-container').style.display = 'none';
-            document.querySelector('.login-container').style.display = 'block';
-        });
-    </script>
 
 
 {% endblock %}

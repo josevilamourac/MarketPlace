@@ -10,7 +10,7 @@ class Loja(models.Model):
     imagem = models.ImageField(upload_to='images/', null=True, blank=True)  # Campo de imagem do produto
 
 
-    def __str__(self):
+    def _str_(self):
         return self.user.username
 
 
@@ -21,7 +21,7 @@ class Product(models.Model):
     quantidade = models.DecimalField(max_digits=10, decimal_places=0)
     loja = models.ForeignKey(Loja, on_delete=models.CASCADE, related_name='products')
 
-    def __str__(self):
+    def _str_(self):
         return self.nome
 
 
@@ -32,7 +32,7 @@ class UserPerfil(models.Model):
     messages_received = models.ManyToManyField('Messagem', related_name='receivers')
     products_bought = models.ManyToManyField(Product, related_name='buyers')
 
-    def __str__(self):
+    def _str_(self):
         return self.user.username
 
 
@@ -40,7 +40,7 @@ class Admin(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     telefone = models.CharField(max_length=15)
 
-    def __str__(self):
+    def _str_(self):
         return self.user.username
 
 
@@ -51,5 +51,5 @@ class Messagem(models.Model):
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f"{self.sender} -> {self.receiver}: {self.subject}"
+    def _str_(self):
+        return f"{self.sender} -> {self.receiver}: {self.subject}"
