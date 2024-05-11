@@ -66,7 +66,8 @@ def loja(request, store_id):
     loja = Loja.objects.get(pk=store_id)
     produtos_da_loja = loja.products.all()
     descricao_loja = loja.descricao
-    return render(request, 'MarketPlace/loja.html', {'store_id': store_id, 'descricao_loja': descricao_loja, 'produtos_da_loja': produtos_da_loja})
+    user_loja = loja.user
+    return render(request, 'MarketPlace/loja.html', {'store_id': store_id, 'descricao_loja': descricao_loja, 'produtos_da_loja': produtos_da_loja, 'user_loja': user_loja})
 
 
 
@@ -220,3 +221,20 @@ def logout(request):
     auth_logout(request)
     # Redirecionar para a página de login ou para qualquer outra página que desejar
     return redirect('marketplace:home')
+
+
+def remover_loja(request, loja_id):
+    loja = get_object_or_404(Loja, id=loja_id)
+
+    # Verifique se o usuário logado é o proprietário da loja
+    if request.user == loja.user:
+        # Remova a loja
+        loja.delete()
+        messages.success(request, 'Loja removida com sucesso!.')
+
+        return redirect('marketplace:home')
+    else:
+        # Se o usuário não for o proprietário da loja, redirecione para alguma página de erro ou aviso
+        messages.success(request, 'Nao tem permissoes para tal!.')
+        return redirect('marketplace:home')
+
