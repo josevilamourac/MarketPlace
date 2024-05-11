@@ -5,22 +5,28 @@
     <div class="container  px-lg-5">
         <div class="card bg-light border-0 h-100">
             <h2 class="text-center mb-4">Login</h2>
-            <form>
+            <form method="post" action="{% url 'marketplace:login' %}">
+                {% csrf_token %}
                 <div class="form-group">
-                    <label for="email">Email address</label>
-                    <input type="email" class="form-control textarea" id="email" placeholder="Enter email">
-                </div>
+                <label for="username">Nome de usuário:</label><br>
+                <input type="text" id="username" name="username"><br>
+                 </div>
                 <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" class="form-control textarea" id="password" placeholder="Password">
-                </div>
-                <button type="submit" class="btn btn-primary btn-lg">Login</button>
-            </form>
-            <hr>
-            <p class="text-center">Don't have an account? <a href="{% url 'MarketPlaceAPP:registo_user' %}" id="signup-link">Sign up as User</a></p>
-            <p class="text-center">Don't have an account? <a href="{% url 'MarketPlaceAPP:registo_loja' %}" id="signup-link">Sign up as Manager</a></p>
-            <p class="text-center">Don't have an account? <a href="{% url 'MarketPlaceAPP:registo_admin' %}" id="signup-link">Sign up as Admin</a></p>
 
+                <label for="password">Senha:</label><br>
+                <input type="password" id="password" name="password"><br><br>
+                </div>
+                <input type="submit" value="Login">
+            </form>
+
+            <hr>
+<div class="text-center">
+    <p>Don't have an account?</p>
+    <div class="btn-group" role="group" aria-label="Sign up options">
+        <a class="btn btn-primary btn-lg mr-10" href="{% url 'MarketPlaceAPP:registo_user' %}" id="signup-user-link">Sign up as User</a>
+        <a class="btn btn-primary btn-lg" href="{% url 'MarketPlaceAPP:registo_loja' %}" id="signup-manager-link">Sign up as Manager</a>
+    </div>
+</div>
         </div>
     </div>
 

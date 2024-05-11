@@ -9,6 +9,16 @@
 
     <!-- Page Features-->
     <div class="row gx-lg-5">
+    {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+    {% endif %}
+
+
+
         {% for loja in lojas %}
         <div class="col-lg-6 col-xxl-4 mb-5">
             <div class="card bg-light border-0 h-100">
