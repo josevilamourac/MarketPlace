@@ -6,6 +6,17 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib import messages
+import os
+
+from django.shortcuts import redirect
+from django.http import HttpResponse
+from django.shortcuts import render
+from django.contrib.auth import authenticate, login
+from .forms import UserForm, UserRegistoForm, AdminForm, LojaForm
+
+
+from .forms import ProductForm
+from .models import Loja
 
 
 from MarketPlace import settings
@@ -125,3 +136,56 @@ def remove_product(request, store_id, product_id):
     messages.success(request, 'Produto removido com sucesso.')
     # Redirecione de volta para a página da loja com uma mensagem de sucesso
     return HttpResponseRedirect(reverse('marketplace:loja', args=[store_id]))
+def registo_user(request):
+    if request.method == 'POST':
+        form_user = UserRegistoForm(request.POST)
+        form_cliente = UserForm(request.POST)
+        if form_user.is_valid() and form_cliente.is_valid():
+            user = form_user.save()
+            cliente = form_cliente.save(commit=False)
+            cliente.user = user
+            cliente.save()
+            raw_password = form_user.cleaned_data.get('password1')
+            user = authenticate(username=user.username, password=raw_password)
+            login(request, user)
+            return redirect('MarketPlace:home')
+    else:
+        form_user = UserRegistoForm()
+        form_cliente = UserForm()
+    return render(request, 'MarketPlace/registo_user.html', {'form_user': form_user, 'form_cliente': form_cliente})
+
+def registo_admin(request):
+    if request.method == 'POST':
+        form_user = UserRegistoForm(request.POST)
+        form_admin = AdminForm(request.POST)
+        if form_user.is_valid() and form_admin.is_valid():
+            user = form_user.save()
+            admin = form_admin.save(commit=False)
+            admin.user = user
+            admin.save()
+            raw_password = form_user.cleaned_data.get('password1')
+            user = authenticate(username=user.username, password=raw_password)
+            login(request, user)
+            return redirect('MarketPlace:home')
+    else:
+        form_user = UserRegistoForm()
+        form_admin = UserForm()
+    return render(request, 'MarketPlace/registo_admin.html', {'form_user': form_user, 'form_admin': form_admin})
+
+def registo_loja(request):
+    if request.method == 'POST':
+        form_user = UserRegistoForm(request.POST)
+        form_loja = LojaForm(request.POST)
+        if form_user.is_valid() and form_loja.is_valid():
+            user = form_user.save()
+            loja = form_loja.save(commit=False)
+            loja.user = user
+            loja.save()
+            raw_password = form_user.cleaned_data.get('password1')
+            user = authenticate(username=user.username, password=raw_password)
+            login(request, user)
+            return redirect('MarketPlace:home')
+    else:
+        form_user = UserRegistoForm()
+        form_loja = UserForm()
+    return render(request, 'MarketPlace/registo_loja.html', {'form_user': form_user, 'form_loja':form_loja})
