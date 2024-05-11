@@ -1,15 +1,29 @@
 {% extends "./index.html" %}
 
 {% block header %}
+
     <div class="container px-lg-5">
         <div class="card bg-light border-0 h-100 p-4">
 
             <h1 class="display-4">Adicionar Produto</h1>
-              <form method="post" enctype="multipart/form-data">
+
+            <form method="post" enctype="multipart/form-data"  action="{% url 'marketplace:add_product' store_id=store_id %}">
                 {% csrf_token %}
-                {{ form.as_p }}  <!-- Certifique-se de usar o método as_p para renderizar os campos do formulário -->
+                <label for="nome">Nome:</label><br>
+                <input type="text" id="nome" name="nome" class="form-control" required><br>
+
+                <label for="descricao">Descrição:</label><br>
+                <textarea id="descricao" name="descricao" class="form-control" required></textarea><br>
+
+                <label for="preco">Preço:</label><br>
+                <input type="number" id="preco" name="preco" class="form-control" required><br>
+
+                <label for="quantidade">Quantidade:</label><br>
+                <input type="number" id="quantidade" name="quantidade" class="form-control" required><br>
+
                 <button type="submit" class="btn btn-primary">Adicionar Produto</button>
             </form>
         </div>
     </div>
+
 {% endblock %}
