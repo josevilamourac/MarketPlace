@@ -14,6 +14,8 @@
                                 <h1 class="display-4 fw-bolder">Loja {{ store_id }}</h1>
                                 <p class="lead fw-normal text-white-50 mb-0">Loja {{ descricao_loja }}</p>
                                 <a href="{% url 'marketplace:add_product' store_id %}" class="btn btn-primary">Adicionar Produto</a>
+                                                <a class="btn bg-primary bg-gradient btn-sm" href="{% url 'marketplace:home'%}">Voltar atras</a>
+
                                 {% if mens %}
                                     {{ mens }}
                                 {% endif %}
@@ -74,6 +76,8 @@
                                     <div class="text-center text-white">
                                         <h1 class="display-4 fw-bolder">Loja {{ store_id }}</h1>
                                         <p class="lead fw-normal text-white-50 mb-0">Loja {{ descricao_loja }}</p>
+                                                                                    <a class="btn bg-primary bg-gradient btn-sm" href="{% url 'marketplace:home'%}">Voltar atras</a>
+
                                         {% if mens %}
                                             {{ mens }}
                                         {% endif %}
