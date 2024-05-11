@@ -8,8 +8,8 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = ['nome', 'descricao', 'preco', 'quantidade', 'loja']
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def _init_(self, *args, **kwargs):
+        super()._init_(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({'class': 'form-control'})
 
@@ -18,13 +18,14 @@ class UserRegistoForm(UserCreationForm):
         model = User
         fields = ['username', 'password1', 'password2', 'email']
 
+
 class UserForm(forms.ModelForm):
     class Meta:
         model = UserPerfil
-        fields = ['user', 'telefone']
+        fields = ['telefone']  # Removed 'user' from the fields
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def _init_(self, *args, **kwargs):
+        super()._init_(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({'class': 'form-control'})
 
@@ -33,8 +34,8 @@ class LojaForm(forms.ModelForm):
         model = Loja
         fields = ['telefone', 'endereco', 'descricao', 'imagem']
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def _init_(self, *args, **kwargs):
+        super()._init_(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({'class': 'form-control'})
 
@@ -43,7 +44,7 @@ class AdminForm(forms.ModelForm):
         model = Admin
         fields = ['user', 'telefone']
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def _init_(self, *args, **kwargs):
+        super()._init_(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({'class': 'form-control'})
