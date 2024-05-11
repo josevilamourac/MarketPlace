@@ -41,7 +41,7 @@ class UserForm(forms.ModelForm):
 class LojaForm(forms.ModelForm):
     class Meta:
         model = Loja
-        fields = ['user', 'telefone', 'endereco', 'descricao', 'imagem']
+        fields = ['telefone', 'endereco', 'descricao', 'imagem']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

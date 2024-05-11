@@ -31,6 +31,7 @@ class UserPerfil(models.Model):
     messages_sent = models.ManyToManyField('Messagem', related_name='senders')
     messages_received = models.ManyToManyField('Messagem', related_name='receivers')
     products_bought = models.ManyToManyField(Product, related_name='buyers')
+    is_manager = models.BooleanField(default=False)  # Adicionando campo para representar se é um gerente
 
     def _str_(self):
         return self.user.username

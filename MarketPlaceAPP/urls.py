@@ -9,7 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.index, name="index"),
     path('home/', views.home, name='home'),
-    path('login/', views.login, name='login'),
+    path('login/', views.login_user, name='login'),
     path('contact/', views.contact, name='contact'),
     path('perfil/', views.perfil, name='perfil'),
     path('carrinho/', views.carrinho, name='carrinho'),
@@ -22,4 +22,6 @@ urlpatterns = [
     path('registo_user/', views.registo_user, name='registo_user'),
     path('registo_admin/', views.registo_admin, name='registo_admin'),
     path('registo_loja/', views.registo_loja, name='registo_loja'),
+    path('remover_loja/<int:loja_id>/', views.remover_loja, name='remover_loja'),
+
 ]
