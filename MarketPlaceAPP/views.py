@@ -207,7 +207,7 @@ def registo_loja(request):
     if request.user.is_authenticated:
 
         # Verifique se o perfil do usuário existe
-        if hasattr(request.user, 'userperfil') or request.user.is_staff:
+        if hasattr(request.user, 'userperfil'):
             # Verifique se o usuário é um gerente
             if request.user.userperfil.is_manager or request.user.userperfil.is_admin:
                 if Loja.objects.filter(user=request.user).exists():
