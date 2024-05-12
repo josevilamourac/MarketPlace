@@ -153,21 +153,39 @@ def remove_product(request, store_id, product_id):
     return HttpResponseRedirect(reverse('marketplace:loja', args=[store_id]))
 def registo_user(request):
     if request.method == 'POST':
-        form_user = UserRegistoForm(request.POST)
-        form_cliente = UserForm(request.POST)
-        if form_user.is_valid() and form_cliente.is_valid():
-            user = form_user.save()
-            cliente = form_cliente.save(commit=False)
-            cliente.user = user
-            cliente.save()
-            raw_password = form_user.cleaned_data.get('password1')
-            user = authenticate(username=user.username, password=raw_password)
-            login(request, user)
-            return redirect('MarketPlace:home')
+        # Obtenha os dados do formulário do request.POST
+        username = request.POST.get('username')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        email = request.POST.get('email')
+
+        # Verifique se as senhas coincidem
+        if password1 != password2:
+            # Retorne uma mensagem de erro se as senhas não coincidirem
+            return render(request, 'MarketPlace/registo_user.html', {'error_message': 'As senhas não coincidem.'})
+
+        # Verifique se já existe um usuário com o mesmo nome de usuário ou e-mail
+        if User.objects.filter(username=username).exists() or User.objects.filter(email=email).exists():
+            # Retorne uma mensagem de erro se o usuário ou e-mail já estiverem em uso
+            return render(request, 'MarketPlace/registo_user.html', {'error_message': 'Nome de usuário ou e-mail já em uso.'})
+
+        # Crie o usuário
+        user = User.objects.create_user(username=username, email=email, password=password1)
+
+        # Crie o perfil do usuário
+        user_profile = UserPerfil.objects.create(user=user)
+
+        # Autentique o usuário recém-criado e faça o login
+        user = authenticate(username=username, password=password1)
+        login(request, user)
+
+        # Redirecione para a página inicial
+        return redirect('marketplace:home')
+
     else:
-        form_user = UserRegistoForm()
-        form_cliente = UserForm()
-    return render(request, 'MarketPlace/registo_user.html', {'form_user': form_user, 'form_cliente': form_cliente})
+        # Se o método for GET, exiba o formulário vazio
+        return render(request, 'MarketPlace/registo_user.html')
+
 
 def registo_admin(request):
     if request.method == 'POST':
@@ -189,10 +207,11 @@ def registo_admin(request):
 
 def registo_loja(request):
     if request.user.is_authenticated:
+
         # Verifique se o perfil do usuário existe
         if hasattr(request.user, 'userperfil'):
             # Verifique se o usuário é um gerente
-            if request.user.userperfil.is_manager:
+            if request.user.userperfil.is_manager or request.user.userperfil.is_admin:
                 if Loja.objects.filter(user=request.user).exists():
                     messages.error(request, 'Este usuário já possui uma loja.')
                     return redirect('marketplace:registo_loja')
@@ -284,7 +303,7 @@ def remover_loja(request, loja_id):
     loja = get_object_or_404(Loja, id=loja_id)
 
     # Verifique se o usuário logado é o proprietário da loja
-    if request.user == loja.user:
+    if request.user == loja.user or request.user.is_superuser:
         # Remova a loja
         loja.delete()
         messages.success(request, 'Loja removida com sucesso!.')
