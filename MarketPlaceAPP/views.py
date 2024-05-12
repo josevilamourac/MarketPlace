@@ -15,6 +15,8 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
 from .forms import UserForm, UserRegistoForm, AdminForm, LojaForm
+from .models import Item, Carrinho, Compra
+
 
 
 from .forms import ProductForm
@@ -236,6 +238,8 @@ def registo_loja(request):
             telefone = request.POST.get('telefone')
             endereco = request.POST.get('endereco')
             descricao = request.POST.get('descricao')
+            saldo = request.POST.get('saldo')
+
             imagem = request.FILES.get('imagem')  # Para campos de arquivo, use request.FILES
 
             # Verificar se o usuário já possui uma loja
@@ -246,7 +250,7 @@ def registo_loja(request):
             # Crie o usuário
             user = User.objects.create_user(username=username, email=email, password=password1)
 
-            perfil = UserPerfil.objects.create(user=user, telefone=telefone, is_manager=True)
+            perfil = UserPerfil.objects.create(user=user, telefone=telefone, is_manager=True, saldo=saldo)
             loja = Loja.objects.create(user=user, telefone=telefone, endereco=endereco, descricao=descricao,
                                        imagem=imagem)
 
@@ -291,3 +295,30 @@ def remover_loja(request, loja_id):
         messages.success(request, 'Nao tem permissoes para tal!.')
         return redirect('marketplace:home')
 
+def adicionar_carrinho(request, item_id):
+    if request.method == 'POST':
+        produto = get_object_or_404(Product, id=item_id)
+        carrinho, created = Carrinho.objects.get_or_create(user=request.user)
+        carrinho.itens.add(produto)
+        messages.success(request, 'Adicionado ao carrinho!')
+        # Redireciona para a página da loja
+        return redirect('marketplace:loja', store_id=produto.loja.id)
+    else:
+        produto = get_object_or_404(Product, id=item_id)
+
+        return redirect('marketplace:loja', store_id=produto.loja.id)
+
+def fazer_compra(user, request):
+    carrinho = get_object_or_404(Carrinho, user=user)
+    total = sum(item.preco for item in carrinho.itens.all())
+    user_profile = request.user.userperfil  # Obtém o perfil do usuário atual
+    saldo = user_profile.saldo  # Obtém o saldo do perfil do usuário
+    if saldo >= total:
+        for item in carrinho.itens.all():
+            Compra.objects.create(user=user, item=item, quantidade=1)
+        user_profile.saldo -= total  # Deduz o total do saldo do perfil do usuário
+        user_profile.save()  # Salva as alterações no perfil do usuário
+        carrinho.itens.clear()
+        return True
+    else:
+        return False
