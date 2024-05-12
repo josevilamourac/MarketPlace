@@ -32,7 +32,7 @@
                                     <form method="post" action="{% url 'marketplace:select_store' %}">
                                         {% csrf_token %}
 
-                                        <input type="hidden" name="store_id" value="{{ loja.nome }}">
+                                        <input type="hidden" name="store_id" value="{{ loja.id }}">
 
                                         <div class="feature  text-white rounded-3 mb-4 mt-n4">
                                             <button type="submit" class="btn bg-primary bg-gradient btn-sm">Ver</button>

@@ -63,12 +63,14 @@ def carrinho(request):
 
 @login_required
 def loja(request, store_id):
+
     loja = Loja.objects.get(pk=store_id)
+    loja_nome = loja.nome
     produtos_da_loja = loja.products.all()
     descricao_loja = loja.descricao
     user_loja = loja.user
     return render(request, 'MarketPlace/loja.html',
-                  {'store_id': store_id, 'descricao_loja': descricao_loja, 'produtos_da_loja': produtos_da_loja,
+                  {'loja_nome': loja_nome,'store_id': store_id, 'descricao_loja': descricao_loja, 'produtos_da_loja': produtos_da_loja,
                    'user_loja': user_loja})
 
 

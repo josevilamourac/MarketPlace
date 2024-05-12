@@ -2,15 +2,17 @@
 
 {% block header %}
     <div class="container px-lg-5">
-        <div class="card bg-light border-0 h-100 p-4">
+        <div class="p-4 p-lg-5 bg-light rounded-3 text-right">
+            <div class="m-4 m-lg-5">
 
-            <h1 class="display-4">Registo Admin</h1>
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{form_user.as_p}}
-                {{form_admin.as_p}}
-                <button type="submit" class="btn btn-primary">Registo Admin</button>
-            </form>
+                <h1 class="display-4">Registo Admin</h1>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form_user.as_p }}
+                    {{ form_admin.as_p }}
+                    <button type="submit" class="btn btn-primary">Registo Admin</button>
+                </form>
+            </div>
         </div>
     </div>
-{%endblock%}
+{% endblock %}

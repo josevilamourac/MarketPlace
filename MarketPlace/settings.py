@@ -128,10 +128,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Defina o diretório de mídia
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # Configurações adicionais...
 
 # Certifique-se de ter essa configuração, caso ainda não tenha
 # Configuração para URL base dos arquivos de mídia
-MEDIA_URL = '/media/'
+MEDIA_URL = 'MarketPlaceAPP/static/MarketPlace/midea'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'MarketPlaceAPP/static/MarketPlace/midea')
