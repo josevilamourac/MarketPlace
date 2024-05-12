@@ -5,105 +5,48 @@
             <div class="p-4 p-lg-5 bg-light rounded-3 text-center">
                 <div class="m-4 m-lg-5">
                     <h2 class="text-center mb-4">Carrinho de Compras</h2>
-
                 </div>
             </div>
         </div>
     </header>
 {% endblock %}
 {% block body %}
-
     <div class="container cart-container">
-        <div id="cart-items"></div>
-        <div class="cart-total text-right mt-4">
-            Total: <span id="cart-total">$0.00</span>
-        </div>
-        <div class="text-center mt-4">
-            <button type="button" class="btn btn-primary">Finalizar Compra</button>
-        </div>
-    </div>
-
-    <script>
-        // Array de itens do carrinho
-        const cartItems = [
-            {
-                id: 1,
-                name: "Product 1",
-                description: "Description of product 1",
-                price: 50,
-                quantity: 1,
-                image: "product1.jpg"
-            },
-            {
-                id: 2,
-                name: "Product 2",
-                description: "Description of product 2",
-                price: 40,
-                quantity: 1,
-                image: "product2.jpg"
-            }
-        ];
-
-        // Função para gerar os itens do carrinho
-        function generateCartItems() {
-            const cartContainer = document.getElementById('cart-items');
-            let totalPrice = 0;
-
-            cartItems.forEach(item => {
-                const cartItem = document.createElement('div');
-                cartItem.classList.add('cart-item');
-                cartItem.innerHTML = `
+        <div id="cart-items">
+            {% for item in cart_items %}
+                <div class="cart-item">
                     <div class="row align-items-center">
                         <div class="col-md-2">
-                            <img src="${item.image}" alt="${item.name}">
+                            <img src="{{ item.imagem.url }}" alt="{{ item.nome }}">
                         </div>
                         <div class="col-md-4">
-                            <h5>${item.name}</h5>
-                            <p>${item.description}</p>
+                            <h5>{{ item.nome }}</h5>
+                            <p>{{ item.descricao }}</p>
                         </div>
-                        <div class="col-md-2">$${item.price.toFixed(2)}</div>
+                        <div class="col-md-2">${{ item.preco }}</div>
                         <div class="col-md-2">
-                            <input type="number" class="form-control" value="${item.quantity}" onchange="updateTotal(${item.id})">
+                            <input type="number" class="form-control" value="{{ item.quantidade }}" onchange="updateTotal({{ item.id }})">
                         </div>
-                        <div class="col-md-2">$${(item.price * item.quantity).toFixed(2)}</div>
+                        <div class="col-md-2">${{ item.preco|floatformat:"2" }}</div>
                         <div class="col-md-12 mt-2 text-right">
-                            <button type="button" class="btn btn-danger btn-sm" onclick="removeItem(${item.id})">Remover</button>
+                            <form action="{% url 'marketplace:remover_item_carrinho' item.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm">Remover</button>
+                            </form>
                         </div>
                     </div>
-                `;
-                cartContainer.appendChild(cartItem);
-                totalPrice += item.price * item.quantity;
-            });
-
-            // Atualizar o total do carrinho
-            document.getElementById('cart-total').textContent = `$${totalPrice.toFixed(2)}`;
-        }
-
-        // Função para atualizar o total do carrinho quando a quantidade de um item é alterada
-        function updateTotal(itemId) {
-            let totalPrice = 0;
-            const quantityInputs = document.querySelectorAll('.cart-item input[type="number"]');
-            quantityInputs.forEach(input => {
-                const itemIndex = [...quantityInputs].indexOf(input);
-                cartItems[itemIndex].quantity = parseInt(input.value);
-                totalPrice += cartItems[itemIndex].price * cartItems[itemIndex].quantity;
-                document.querySelectorAll('.col-md-2')[itemIndex + 3].textContent = `$${(cartItems[itemIndex].price * cartItems[itemIndex].quantity).toFixed(2)}`;
-            });
-            document.getElementById('cart-total').textContent = `$${totalPrice.toFixed(2)}`;
-        }
-
-        // Função para remover um item do carrinho
-        function removeItem(itemId) {
-            const itemIndex = cartItems.findIndex(item => item.id === itemId);
-            if (itemIndex !== -1) {
-                cartItems.splice(itemIndex, 1);
-                document.getElementById('cart-items').innerHTML = '';
-                generateCartItems();
-            }
-        }
-
-        // Gerar os itens do carrinho ao carregar a página
-        window.onload = generateCartItems;
-    </script>
-
+                </div>
+            {% endfor %}
+        </div>
+        <div class="cart-total text-right mt-4">
+            Total: <span id="cart-total">${{ total_price }}</span>
+        </div>
+        <div class="text-center mt-4">
+            <form method="post" action="{% url 'marketplace:comprar' %}">
+    {% csrf_token %}
+    <input type="hidden" name="total_price" value="{{ total_price }}">
+    <button type="submit" class="btn btn-primary">Finalizar Compra</button>
+</form>
+        </div>
+    </div>
 {% endblock %}

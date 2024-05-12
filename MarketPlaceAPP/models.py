@@ -1,3 +1,5 @@
+from datetime import timezone
+
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -34,8 +36,9 @@ class UserPerfil(models.Model):
     is_manager = models.BooleanField(default=False)  # Adicionando campo para representar se é um gerente
     is_admin = models.BooleanField(default=False)  # Adicionando campo para representar se é um gerente
 
-    def _str_(self):
-        return self.user.username
+    saldo = models.IntegerField(default=0)
+
+
 
 
 class Admin(models.Model):
@@ -55,3 +58,11 @@ class Messagem(models.Model):
 
     def _str_(self):
         return f"{self.sender} -> {self.receiver}: {self.subject}"
+
+class ShoppingCart(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    products = models.ManyToManyField('Product')
+
+class Compra(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    total = models.DecimalField(max_digits=10, decimal_places=2)

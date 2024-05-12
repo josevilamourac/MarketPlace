@@ -23,6 +23,8 @@ urlpatterns = [
     path('registo_admin/', views.registo_admin, name='registo_admin'),
     path('registo_loja/', views.registo_loja, name='registo_loja'),
     path('remover_loja/<int:loja_id>/', views.remover_loja, name='remover_loja'),
-    path('adicionar_carrinho/<int:item_id>/', views.adicionar_carrinho, name='adicionar_carrinho'),
+    path('adicionar_carrinho/<int:produto_id>/', views.adicionar_ao_carrinho, name='adicionar_carrinho'),
+    path('carrinho/remover/<int:item_id>/', views.remover_item_carrinho, name='remover_item_carrinho'),
+    path('comprar/', views.comprar, name='comprar'),
 
 ]
