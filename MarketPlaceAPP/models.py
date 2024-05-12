@@ -8,7 +8,7 @@ class Loja(models.Model):
     telefone = models.CharField(max_length=15)
     endereco = models.TextField()
     descricao = models.TextField()
-    imagem = models.ImageField(upload_to='images/', null=True, blank=True)  # Campo de imagem do produto
+    imagem = models.ImageField(upload_to='images/', null=True, blank=True, default="loja.jpg")  # Campo de imagem do produto
 
 
     def _str_(self):

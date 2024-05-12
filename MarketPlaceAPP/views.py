@@ -28,8 +28,8 @@ def index(request):
 
 def home(request):
     lojas = Loja.objects.all()  # Recupera todos os objetos de loja do banco de dados
-
-    return render(request, 'MarketPlace/home.html', {'lojas': lojas})
+    lojas_ids = lojas.values_list('user_id', flat=True)
+    return render(request, 'MarketPlace/home.html', {'lojas': lojas, 'lojas_ids': lojas_ids})
 
 
 def login_user(request):
@@ -70,10 +70,11 @@ def loja(request, store_id):
     produtos_da_loja = loja.products.all()
     descricao_loja = loja.descricao
     user_loja = loja.user
+    loja_imagem = loja.imagem
     return render(request, 'MarketPlace/loja.html',
                   {'loja_nome': loja_nome, 'store_id': store_id, 'descricao_loja': descricao_loja,
                    'produtos_da_loja': produtos_da_loja,
-                   'user_loja': user_loja})
+                   'user_loja': user_loja, 'loja_imagem': loja_imagem})
 
 
 @login_required

@@ -1,15 +1,21 @@
 {% extends "./index.html" %}
-
+{% load static %}
 {% block header %}
     {% if request.user.is_authenticated %}
         {% if request.user == user_loja or request.user.is_staff %}
             <header class="py-5">
                 <div class="container px-lg-5">
+                 <img src="{% static 'MarketPlace/midea/images/' %}{{ loja_imagem }}"
+                                     class="img-fluid rounded mx-auto d-block"
+                                     style="max-height: 50%; max-width: 100%;
                     <div class="p-4 p-lg-5 bg-light rounded-3 text-center">
                         <div class="m-4 m-lg-5">
                             <header class="bg-dark py-5">
                                 <div class="container px-4 px-lg-5 my-5">
                                     <div class="text-center text-white">
+                                    <img src="{% static 'MarketPlace/midea/images/' %}{{ loja_imagem }}"
+                                     class="img-fluid rounded mx-auto d-block"
+                                     style="max-height: 50%; max-width: 100%;">
                                         <h1 class="display-4 fw-bolder">Loja {{ store_id }}</h1>
                                         <p class="lead fw-normal text-white-50 mb-0">Loja {{ descricao_loja }}</p>
                                         <a href="{% url 'marketplace:add_product' store_id %}" class="btn btn-primary">Adicionar Produto</a>
