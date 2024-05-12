@@ -22,4 +22,6 @@ urlpatterns = [
     path('registo_user/', views.registo_user, name='registo_user'),
     path('registo_admin/', views.registo_admin, name='registo_admin'),
     path('registo_loja/', views.registo_loja, name='registo_loja'),
+    path('remover_loja/<int:loja_id>/', views.remover_loja, name='remover_loja'),
+
 ]
