@@ -1,37 +1,43 @@
 {% extends "./index.html" %}
 {% block header %}
 
-<header>
-    <div class="container  px-lg-5">
-        <div class="card bg-light border-0 h-100">
-            <h2 class="text-center mb-4">Login</h2>
-            <form method="post" action="{% url 'marketplace:login' %}">
-                {% csrf_token %}
-                <div class="form-group">
-                <label for="username">Nome de usuário:</label><br>
-                <input type="text" id="username" name="username"><br>
-                 </div>
-                <div class="form-group">
 
-                <label for="password">Senha:</label><br>
-                <input type="password" id="password" name="password"><br><br>
+        <header class="py-5">
+            <div class="container px-lg-5">
+                <div class="p-4 p-lg-5 bg-light rounded-3 text-center">
+                    <div class="m-4 m-lg-5">
+                        <div class="card bg-light border-0 h-100">
+                            <h2 class=" mb-4">Login</h2>
+                            <form method="post" action="{% url 'marketplace:login' %}">
+                                {% csrf_token %}
+                                <div class="  form-group">
+                                    <label for="username">Nome de usuário:</label><br>
+                                    <input type="text" id="username" name="username"><br>
+                                </div>
+                                <div class="form-group">
+
+                                    <label for="password">Senha:</label><br>
+                                    <input type="password" id="password" name="password"><br><br>
+                                </div>
+                                <input type="submit" value="Login">
+                            </form>
+
+                            <hr>
+                            <div class="text-center">
+                                <p class="text-warning">Não tem conta?</p>
+                                <div class="btn-group" role="group" aria-label="Sign up options">
+                                    <a class="btn btn-light btn-lg mr-10" href="{% url 'MarketPlaceAPP:registo_user' %}"
+                                       id="signup-user-link">Criar Usuário</a>
+                                    <a class="btn btn-dark btn-lg" href="{% url 'MarketPlaceAPP:registo_loja' %}"
+                                       id="signup-manager-link">Criar Loja</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-                <input type="submit" value="Login">
-            </form>
-
-            <hr>
-<div class="text-center">
-    <p>Don't have an account?</p>
-    <div class="btn-group" role="group" aria-label="Sign up options">
-        <a class="btn btn-primary btn-lg mr-10" href="{% url 'MarketPlaceAPP:registo_user' %}" id="signup-user-link">Sign up as User</a>
-        <a class="btn btn-primary btn-lg" href="{% url 'MarketPlaceAPP:registo_loja' %}" id="signup-manager-link">Sign up as Manager</a>
-    </div>
-</div>
-        </div>
-    </div>
-
-
-</header>
+            </div>
+        </header>
 
 
 

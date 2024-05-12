@@ -134,5 +134,5 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Certifique-se de ter essa configuração, caso ainda não tenha
 # Configuração para URL base dos arquivos de mídia
-MEDIA_URL = 'MarketPlaceAPP/static/MarketPlace/midea'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'MarketPlaceAPP/static/MarketPlace/midea')
+MEDIA_URL = 'MarketPlaceAPP/static/MarketPlace/midea/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'MarketPlaceAPP/static/MarketPlace/midea/')

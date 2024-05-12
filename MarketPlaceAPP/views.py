@@ -1,6 +1,6 @@
 # Create your views here.
 import os
-
+from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
@@ -20,6 +20,7 @@ from .models import Loja, UserPerfil
 from MarketPlace import settings
 from .models import Loja, Product
 from django.contrib.auth.decorators import login_required, user_passes_test
+import glob
 
 def index(request):
     return home(request)
@@ -63,14 +64,14 @@ def carrinho(request):
 
 @login_required
 def loja(request, store_id):
-
     loja = Loja.objects.get(pk=store_id)
     loja_nome = loja.nome
     produtos_da_loja = loja.products.all()
     descricao_loja = loja.descricao
     user_loja = loja.user
     return render(request, 'MarketPlace/loja.html',
-                  {'loja_nome': loja_nome,'store_id': store_id, 'descricao_loja': descricao_loja, 'produtos_da_loja': produtos_da_loja,
+                  {'loja_nome': loja_nome, 'store_id': store_id, 'descricao_loja': descricao_loja,
+                   'produtos_da_loja': produtos_da_loja,
                    'user_loja': user_loja})
 
 
@@ -214,7 +215,6 @@ def registo_admin(request):
     return render(request, 'MarketPlace/registo_admin.html', {'form_user': form_user, 'form_admin': form_admin})
 
 
-
 def registo_loja(request):
     if request.user.is_authenticated:
 
@@ -231,7 +231,13 @@ def registo_loja(request):
                     imagem = request.FILES.get('imagem')
                     telefone = request.POST.get('telefone')  # Use request.POST.get() for non-file fields
                     endereco = request.POST.get('endereco')  # Use request.POST.get() for non-file fields
-
+                    if request.FILES.get('imagem') is not None:
+                        imagem = request.FILES.get('imagem')
+                        fs = FileSystemStorage()
+                        filename = "loja_" + nome
+                        filename = fs.save(filename, imagem)
+                        uploaded_file_url = fs.url(filename)
+                        file_url = render_file(request)
                     print("Encontrou perfil e vai criar loja!")
 
                     loja = Loja.objects.create(
@@ -261,6 +267,7 @@ def registo_loja(request):
         # O usuário não está autenticado
         # Redirecione ou retorne uma resposta proibida
         if request.method == 'POST':
+            nome = request.POST.get('nome')
             username = request.POST.get('username')
             password1 = request.POST.get('password1')
             password2 = request.POST.get('password2')
@@ -279,7 +286,7 @@ def registo_loja(request):
             user = User.objects.create_user(username=username, email=email, password=password1)
 
             perfil = UserPerfil.objects.create(user=user, telefone=telefone, is_manager=True)
-            loja = Loja.objects.create(user=user, telefone=telefone, endereco=endereco, descricao=descricao,
+            loja = Loja.objects.create(user=user, nome=nome, telefone=telefone, endereco=endereco, descricao=descricao,
                                        imagem=imagem)
 
             # Faça a autenticação e redirecione
@@ -314,3 +321,34 @@ def remover_loja(request, loja_id):
         # Se o usuário não for o proprietário da loja, redirecione para alguma página de erro ou aviso
         messages.success(request, 'Nao tem permissoes para tal!.')
         return redirect('marketplace:home')
+
+
+@login_required
+def render_file(request):
+    file_pattern = os.path.join(settings.MEDIA_ROOT, f"{request.user.username}_*.*")
+    matching_files = glob.glob(file_pattern)
+
+    if matching_files:
+        file_path = matching_files[0]
+        file_name = os.path.basename(file_path)
+        file_url = os.path.join(settings.MEDIA_URL, file_name)
+    else:
+        file_url = None
+
+    return file_url
+
+
+@login_required()
+def fazer_upload(request):
+    if request.method == 'POST' and request.FILES.get('myfile') is not None:
+        user = request.user
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = user.username + "_" + myfile.name
+        filename = fs.save(filename, myfile)
+        uploaded_file_url = fs.url(filename)
+        file_url = render_file(request)
+        return render(request, 'votacao/fazer_upload.html',
+                      {'uploaded_file_url': uploaded_file_url, 'file_url': file_url})
+    file_url = render_file(request)
+    return render(request, 'votacao/fazer_upload.html', {'file_url': file_url})
