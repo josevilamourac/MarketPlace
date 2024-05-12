@@ -139,6 +139,18 @@
                                 </div>
                             </div>
                         </div>
+                  
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center">
+                                <form method="post" action="{% url 'marketplace:adicionar_carrinho' produto_id=produto.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-dark mt-auto">Adicionar ao Carrinho</button>
+                            </form>
+                                <a  class="btn btn-outline-dark mt-auto" href="{% url 'marketplace:remove_produto' store_id=store_id product_id=produto.id %}">Remover Produto</a>
+
+                            </div>
+                        </div>
+                    </div>
                     {% endfor %}
                 </div>
             </div>
@@ -162,6 +174,17 @@
                                 </div>
                             </div>
                         </div>
+                  
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center">
+                                    <form method="post" action="{% url 'marketplace:adicionar_carrinho' produto_id=produto.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-dark mt-auto">Adicionar ao Carrinho</button>
+                            </form>
+
+                            </div>
+                        </div>
+                    </div>
                     {% endfor %}
                 </div>
             </div>
@@ -180,10 +203,14 @@
                                     <span class="fw-bold">€{{ produto.preco }}</span>
                                 </div>
                             </div>
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center">
-                                    <a class="btn btn-outline-dark mt-auto" href="#">Adicionar ao Carrinho</a>
-                                </div>
+                        </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center">
+                                    <form method="post" action="{% url 'marketplace:adicionar_carrinho' produto_id=produto.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-dark mt-auto">Adicionar ao Carrinho</button>
+                            </form>
+
                             </div>
                         </div>
                     </div>
@@ -216,8 +243,8 @@
                             </div>
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                                 <div class="text-center">
-                                    <a class="btn btn-outline-dark mt-auto" href="#">Adicionar ao Carrinho</a>
-                                </div>
+
+                             </div>
                             </div>
                         </div>
                     `;

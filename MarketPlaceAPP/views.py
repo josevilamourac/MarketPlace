@@ -1,9 +1,12 @@
 # Create your views here.
+import json
 import os
 from django.core.files.storage import FileSystemStorage
+from decimal import Decimal
+
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden, Http404
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
@@ -16,14 +19,15 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login
 from .forms import UserForm, UserRegistoForm, AdminForm, LojaForm
 from .forms import ProductForm
-from .models import Loja, UserPerfil
+from .models import Loja, UserPerfil, ShoppingCart, Compra
+
 from MarketPlace import settings
 from .models import Loja, Product
 from django.contrib.auth.decorators import login_required, user_passes_test
 import glob
 
 def index(request):
-    return home(request)
+    return HttpResponse("Pagina de entrada da app votacao.")
 
 
 def home(request):
@@ -59,8 +63,31 @@ def perfil(request):
 
 
 @login_required
+from django.http import JsonResponse
+from .models import ShoppingCart
+
 def carrinho(request):
-    return render(request, 'MarketPlace/carrinho.html')
+    if request.user.is_authenticated:
+        try:
+            carrinho = ShoppingCart.objects.get(user=request.user)
+            cart_items = carrinho.products.all()
+            total_price = sum(Decimal(item.preco) * item.quantidade for item in cart_items)
+            total_price_float = float(total_price)  # Convertendo para float
+            cart_items_json = [{'id': item.id, 'nome': item.nome, 'preco': str(item.preco), 'quantidade': item.quantidade} for item in cart_items]
+            if request.GET.get('format') == 'json':
+                return JsonResponse({'cart_items': cart_items_json, 'total_price': total_price_float})
+            else:
+                return render(request, 'MarketPlace/carrinho.html', {'cart_items': cart_items, 'total_price': total_price_float, 'cart_items_json': cart_items_json})
+        except ShoppingCart.DoesNotExist:
+            if request.GET.get('format') == 'json':
+                return JsonResponse({'cart_items': [], 'total_price': 0.0})
+            else:
+                return render(request, 'MarketPlace/carrinho.html', {'cart_items': [], 'total_price': 0, 'cart_items_json': '[]'})
+    else:
+        if request.GET.get('format') == 'json':
+            return JsonResponse({'cart_items': [], 'total_price': 0.0})
+        else:
+            return render(request, 'MarketPlace/carrinho.html', {'cart_items': [], 'total_price': 0, 'cart_items_json': '[]'})
 
 
 @login_required
@@ -168,6 +195,7 @@ def registo_user(request):
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
         email = request.POST.get('email')
+        saldo = request.POST.get('saldo')
 
         # Verifique se as senhas coincidem
         if password1 != password2:
@@ -184,7 +212,7 @@ def registo_user(request):
         user = User.objects.create_user(username=username, email=email, password=password1)
 
         # Crie o perfil do usuário
-        user_profile = UserPerfil.objects.create(user=user)
+        user_profile = UserPerfil.objects.create(user=user,saldo=saldo)
 
         # Autentique o usuário recém-criado e faça o login
         user = authenticate(username=username, password=password1)
@@ -239,7 +267,9 @@ def registo_loja(request):
                         filename = "loja_" + nome
                         filename = fs.save(filename, imagem)
 
-                    print(filename)
+             
+                    saldo = request.POST.get('saldo')
+                    
 
                     loja = Loja.objects.create(
                         nome=nome,
@@ -283,7 +313,8 @@ def registo_loja(request):
                 filename = "loja_" + nome
                 filename = fs.save(filename, imagem)
 
-            print(filename)
+          
+            saldo = request.POST.get('saldo')
             # Verificar se o usuário já possui uma loja
             if Loja.objects.filter(user__username=username).exists():
                 messages.error(request, 'Este usuário já possui uma loja.')
@@ -294,7 +325,7 @@ def registo_loja(request):
 
             perfil = UserPerfil.objects.create(user=user, telefone=telefone, is_manager=True)
             loja = Loja.objects.create(user=user, nome=nome, telefone=telefone, endereco=endereco, descricao=descricao,
-                                       imagem=filename)
+                                       imagem=filename, saldo=saldo)
 
             # Faça a autenticação e redirecione
             user = authenticate(username=username, password=password1)
@@ -304,9 +335,40 @@ def registo_loja(request):
                 return redirect('marketplace:home')
 
         return render(request, 'MarketPlace/registo_loja.html')
-
-
+    
 @login_required
+def adicionar_ao_carrinho(request, produto_id):
+    if request.method == 'POST':
+        # Verifica se o usuário está autenticado
+        if not request.user.is_authenticated:
+            # Redireciona o usuário para a página de login
+            return redirect('marketplace:login')
+
+        # Obtém o produto com o ID fornecido
+        produto = get_object_or_404(Product, pk=produto_id)
+
+        # Obtém o carrinho do usuário atual
+        carrinho, created = ShoppingCart.objects.get_or_create(user=request.user)
+
+        # Verifica se o produto já está no carrinho
+        if produto in carrinho.products.all():
+            # Se o produto já estiver no carrinho, aumenta a quantidade em 1
+            item = carrinho.products.get(pk=produto_id)
+            item.quantidade += 1
+            item.save()
+            messages.success(request, 'A quantidade do produto foi incrementada no carrinho!')
+        else:
+            # Caso contrário, adiciona o produto ao carrinho
+            carrinho.products.add(produto)
+            messages.success(request, 'Produto adicionado ao carrinho!')
+
+        # Redireciona o usuário de volta à página da loja
+        return redirect(reverse('marketplace:loja', kwargs={'store_id': produto.loja_id}))
+
+    # Se a requisição não for do tipo POST, redireciona o usuário para a página da loja
+    return redirect('marketplace:loja')
+
+
 def logout(request):
     auth_logout(request)
     # Redirecionar para a página de login ou para qualquer outra página que desejar
@@ -330,7 +392,67 @@ def remover_loja(request, loja_id):
         return redirect('marketplace:home')
 
 
+def remover_item_carrinho(request, item_id):
+    if request.method == 'POST':
+        # Verifica se o usuário está autenticado
+        if not request.user.is_authenticated:
+            # Redireciona o usuário para a página de login
+            return redirect('marketplace:login')
 
+        # Obtém o produto com o ID fornecido
+        produto = get_object_or_404(Product, pk=item_id)
 
+        # Obtém o carrinho do usuário atual
+        carrinho = get_object_or_404(ShoppingCart, user=request.user)
 
+        # Verifica se o produto está no carrinho
+        if produto in carrinho.products.all():
+            # Obtém o item do carrinho correspondente ao produto
+            item = carrinho.products.get(pk=item_id)
 
+            # Verifica se a quantidade do produto no carrinho é maior que 1
+            if item.quantidade > 1:
+                # Se a quantidade for maior que 1, diminui a quantidade em 1
+                item.quantidade -= 1
+                item.save()
+                messages.success(request, 'A quantidade do produto foi reduzida no carrinho!')
+            else:
+                # Caso contrário, remove o produto do carrinho
+                carrinho.products.remove(produto)
+                messages.success(request, 'Produto removido do carrinho!')
+
+        # Redireciona o usuário de volta à página do carrinho
+        return redirect('marketplace:carrinho')
+
+    # Se a requisição não for do tipo POST, redireciona o usuário para a página do carrinho
+    return redirect('marketplace:carrinho')
+
+def comprar(request):
+    if request.method == 'POST':
+        total = request.POST.get('total_price', 0)  # Obtém o total do carrinho do formulário POST
+        usuario = User.objects.get(username=request.user)
+        perfil = usuario.userperfil
+
+        # Agora você pode acessar o saldo do perfil
+        saldo = perfil.saldo
+
+        total1 = float(total)
+        if saldo >= total1:
+            # Deduz o valor total do saldo do usuário
+            perfil.saldo -= total1
+            perfil.save()
+
+            # Cria a compra no banco de dados
+            compra = Compra.objects.create(usuario=usuario, total=total)
+
+            # Limpa o carrinho do usuário após a compra
+            # (Lembre-se de implementar essa lógica em sua aplicação)
+            # request.session['total_carrinho'] = 0
+
+            messages.success(request, 'Compra realizada com sucesso!')
+            return redirect('marketplace:home' )  # Redireciona para a página de sucesso após a compra
+        else:
+            messages.error(request, 'Saldo insuficiente para realizar a compra.')
+            return redirect('marketplace:carrinho')  # Redireciona de volta para o carrinho se o saldo for insuficiente
+
+    return render(request, 'MarketPlace/carrinho.html')  # Retorne o render do template se a requisição não for POST
