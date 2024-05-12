@@ -260,16 +260,6 @@ def registo_loja(request):
         return render(request, 'MarketPlace/registo_loja.html')
 
 
-
-
-
-
-
-
-
-
-
-
 def logout(request):
     auth_logout(request)
     # Redirecionar para a página de login ou para qualquer outra página que desejar
@@ -291,3 +281,9 @@ def remover_loja(request, loja_id):
         messages.success(request, 'Nao tem permissoes para tal!.')
         return redirect('marketplace:home')
 
+        form_user = UserRegistoForm()
+        form_loja = UserForm()
+    return render(request, 'MarketPlace/registo_loja.html', {'form_user': form_user, 'form_loja':form_loja})
+
+def mensagens(request):
+    return render(request, 'MarketPlace/mensagens.html')
