@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 class Loja(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='loja')
+    nome = models.CharField(default="Sem Nome", max_length=50)
     telefone = models.CharField(max_length=15)
     endereco = models.TextField()
     descricao = models.TextField()

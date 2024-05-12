@@ -32,7 +32,7 @@ class UserForm(forms.ModelForm):
 class LojaForm(forms.ModelForm):
     class Meta:
         model = Loja
-        fields = ['telefone', 'endereco', 'descricao', 'imagem']
+        fields = ['nome','telefone', 'endereco', 'descricao', 'imagem']
 
     def _init_(self, *args, **kwargs):
         super()._init_(*args, **kwargs)
