@@ -14,7 +14,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
 </head>
 
-
 <body>
 
 <!-- Responsive navbar-->
@@ -27,13 +26,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a class="nav-link active" aria-current="page"
-                                        href="{% url 'MarketPlaceAPP:home' %}">Home</a></li>
+                                        href="{% url 'MarketPlaceAPP:home' %}">Home<i class="bi-house-door-fill"></i></a></li>
                 {% block nav %}{% endblock %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
                        data-bs-toggle="dropdown"
                        aria-expanded="false"><i
-                                class="fas fa-user fa-fw"></i></a>
+                            class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="{% url 'MarketPlaceAPP:perfil' %}"><i
                                 class="fas fa-user fa-fw"></i></a></li>
@@ -50,56 +49,60 @@
                     </ul>
                 </li>
 
-            <li class=>
-                <button class="btn btn-outline-light bg-gradientbtn-xs" type="submit">
+                <li class=>
+                    <button class="btn btn-outline-light bg-gradientbtn-xs" type="submit">
 
-                    <a class="navbar-text" href="{% url 'MarketPlaceAPP:carrinho' %}">  <i class="bi-cart-fill me-1"></i></a>
+                        <a class="navbar-text" href="{% url 'MarketPlaceAPP:carrinho' %}"> <i
+                                class="bi-cart-fill me-1"></i></a>
 
-                    <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                </button>
-            </li>
-             </ul>
+                        <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                    </button>
+                </li>
+            </ul>
 
         </div>
     </div>
 </nav>
 
-
 <!-- Header-->
 {% block header %}
     <header class="py-5">
+        <div id="headerCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="{% static 'MarketPlace/midea/index/image1.jpg' %}" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'MarketPlace/midea/index/image2.jpg' %}" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'MarketPlace/midea/index/image3.jpg' %}" class="d-block w-100" alt="...">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#headerCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#headerCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
         <div class="container px-lg-5">
             <div class="p-4 p-lg-5 bg-light rounded-3 text-center">
                 <div class="m-4 m-lg-5">
-
-                        {% if request.user.is_authenticated %}
-
-                         <h1 class="display-5 fw-bold">Bem Vindo Ao MarketPlaceAPP {{ request.user.username }}!</h1>
-
-                    <p class="fs-4">
-                        Explore um mundo de produtos incríveis no nosso Marketplace! Registe-se agora para aceder a
-                        uma ampla variedade de itens exclusivos. Se tem uma loja, junte-se a nós para alcançar uma
-                        audiência global e aumentar as suas vendas. </p>
-                    <a href="{% url 'marketplace:logout' %}">Logout</a>
-
-                    {% else %}
                     <h1 class="display-5 fw-bold">Bem Vindo Ao MarketPlaceAPP!</h1>
-
                     <p class="fs-4">
                         Explore um mundo de produtos incríveis no nosso Marketplace! Registe-se agora para aceder a
                         uma ampla variedade de itens exclusivos. Se tem uma loja, junte-se a nós para alcançar uma
-                        audiência global e aumentar as suas vendas. </p>
-                            <a class="btn btn-primary btn-lg" href="{% url 'MarketPlaceAPP:login' %}">Login</a>
-
-                        {% endif %}
-
+                        audiência global e aumentar as suas vendas.
+                    </p>
+                    <a class="btn btn-primary btn-lg" href="{% url 'MarketPlaceAPP:login' %}">Inscrever</a>
                 </div>
             </div>
         </div>
     </header>
 {% endblock %}
-
-
 
 <main>
     <section class="py-5">
@@ -108,7 +111,6 @@
         {% endblock %}
     </section>
 </main>
-
 
 <!-- Footer-->
 <footer class="py-5 bg-dark navbar navbar-expand-lg">
@@ -124,5 +126,4 @@
     </div>
 </footer>
 </body>
-
 </html>
