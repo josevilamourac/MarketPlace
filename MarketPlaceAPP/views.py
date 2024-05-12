@@ -28,6 +28,7 @@ def index(request):
 
 def home(request):
     lojas = Loja.objects.all()  # Recupera todos os objetos de loja do banco de dados
+
     return render(request, 'MarketPlace/home.html', {'lojas': lojas})
 
 
@@ -231,14 +232,13 @@ def registo_loja(request):
                     imagem = request.FILES.get('imagem')
                     telefone = request.POST.get('telefone')  # Use request.POST.get() for non-file fields
                     endereco = request.POST.get('endereco')  # Use request.POST.get() for non-file fields
-                    if request.FILES.get('imagem') is not None:
-                        imagem = request.FILES.get('imagem')
+                    if imagem is not None:
+
                         fs = FileSystemStorage()
                         filename = "loja_" + nome
                         filename = fs.save(filename, imagem)
-                        uploaded_file_url = fs.url(filename)
-                        file_url = render_file(request)
-                    print("Encontrou perfil e vai criar loja!")
+
+                    print(filename)
 
                     loja = Loja.objects.create(
                         nome=nome,
@@ -246,7 +246,7 @@ def registo_loja(request):
                         endereco=endereco,
                         descricao=descricao,
                         user=request.user,
-                        imagem=imagem
+                        imagem=filename
                     )
                     messages.success(request, 'Loja criada!.')
                     return redirect('marketplace:home')
@@ -276,7 +276,13 @@ def registo_loja(request):
             endereco = request.POST.get('endereco')
             descricao = request.POST.get('descricao')
             imagem = request.FILES.get('imagem')  # Para campos de arquivo, use request.FILES
+            if imagem is not None:
+                #imagem = request.FILES.get('imagem')
+                fs = FileSystemStorage()
+                filename = "loja_" + nome
+                filename = fs.save(filename, imagem)
 
+            print(filename)
             # Verificar se o usuário já possui uma loja
             if Loja.objects.filter(user__username=username).exists():
                 messages.error(request, 'Este usuário já possui uma loja.')
@@ -287,7 +293,7 @@ def registo_loja(request):
 
             perfil = UserPerfil.objects.create(user=user, telefone=telefone, is_manager=True)
             loja = Loja.objects.create(user=user, nome=nome, telefone=telefone, endereco=endereco, descricao=descricao,
-                                       imagem=imagem)
+                                       imagem=filename)
 
             # Faça a autenticação e redirecione
             user = authenticate(username=username, password=password1)
@@ -323,32 +329,7 @@ def remover_loja(request, loja_id):
         return redirect('marketplace:home')
 
 
-@login_required
-def render_file(request):
-    file_pattern = os.path.join(settings.MEDIA_ROOT, f"{request.user.username}_*.*")
-    matching_files = glob.glob(file_pattern)
-
-    if matching_files:
-        file_path = matching_files[0]
-        file_name = os.path.basename(file_path)
-        file_url = os.path.join(settings.MEDIA_URL, file_name)
-    else:
-        file_url = None
-
-    return file_url
 
 
-@login_required()
-def fazer_upload(request):
-    if request.method == 'POST' and request.FILES.get('myfile') is not None:
-        user = request.user
-        myfile = request.FILES['myfile']
-        fs = FileSystemStorage()
-        filename = user.username + "_" + myfile.name
-        filename = fs.save(filename, myfile)
-        uploaded_file_url = fs.url(filename)
-        file_url = render_file(request)
-        return render(request, 'votacao/fazer_upload.html',
-                      {'uploaded_file_url': uploaded_file_url, 'file_url': file_url})
-    file_url = render_file(request)
-    return render(request, 'votacao/fazer_upload.html', {'file_url': file_url})
+
+

@@ -9,10 +9,7 @@
                 <h1 class="display-4">Registo Loja</h1>
                 <form method="post" enctype="multipart/form-data" action="{% url 'marketplace:registo_loja' %}">
                     {% csrf_token %}
-                    <div class="form-group">
-                        <label for="id_nome">Nome da Loja:</label>
-                        <input type="text" name="nome" id="id_nome" class="form-control" required>
-                    </div>
+
                     {% if user.is_authenticated and user.userperfil.is_manager %}
                         <div class="form-group">
                             <label for="id_nome">Nome da Loja:</label>
@@ -36,6 +33,10 @@
                         </div>
                         <button type="submit" class="btn btn-primary">Registar Loja</button>
                     {% else %}
+                        <div class="form-group">
+                            <label for="id_nome">Nome da Loja:</label>
+                            <input type="text" name="nome" id="id_nome" class="form-control" required>
+                        </div>
                         <div class="form-group">
                             <label for="id_username">Username do Manager:</label>
                             <input type="text" name="username" id="id_username" class="form-control" required>
