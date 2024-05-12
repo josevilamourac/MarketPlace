@@ -209,7 +209,7 @@ def registo_loja(request):
         # Verifique se o perfil do usuário existe
         if hasattr(request.user, 'userperfil'):
             # Verifique se o usuário é um gerente
-            if request.user.userperfil.is_manager or request.user.userperfil.is_admin:
+            if request.user.userperfil.is_manager:
                 if Loja.objects.filter(user=request.user).exists():
                     messages.error(request, 'Este usuário já possui uma loja.')
                     return redirect('marketplace:registo_loja')
