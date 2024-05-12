@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, UserPerfil, Admin, Loja
+from .models import Product, UserPerfil, Admin, Loja, Mensagem
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -48,3 +48,9 @@ class AdminForm(forms.ModelForm):
         super()._init_(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({'class': 'form-control'})
+
+
+class MensagemForm(forms.ModelForm):
+    class Meta:
+        model = Mensagem
+        fields = ['receiver', 'subject', 'content']

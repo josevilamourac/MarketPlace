@@ -13,6 +13,7 @@ from django.shortcuts import redirect
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from .forms import UserForm, UserRegistoForm, AdminForm, LojaForm
 from .forms import ProductForm
@@ -20,6 +21,10 @@ from .models import Loja, UserPerfil
 from MarketPlace import settings
 from .models import Loja, Product
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Mensagem, User
+from .forms import MensagemForm
 import glob
 
 def index(request):
@@ -352,3 +357,35 @@ def fazer_upload(request):
                       {'uploaded_file_url': uploaded_file_url, 'file_url': file_url})
     file_url = render_file(request)
     return render(request, 'votacao/fazer_upload.html', {'file_url': file_url})
+
+
+
+def my_view(request):
+    # your logic
+    messages.success(request, 'This is a success message!')
+    messages.error(request, 'Something went wrong.')
+    return render(request, 'my_template.html')
+
+
+@login_required
+def send_message(request):
+    if request.method == 'POST':
+        form = MensagemForm(request.POST)
+        if form.is_valid():
+            mensagem = form.save(commit=False)
+            mensagem.sender = request.user  # O remetente é o usuário logado
+            mensagem.save()
+            return redirect('list_messages')
+    else:
+        form = MensagemForm()
+    return render(request, 'send_message.html', {'form': form})
+
+@login_required
+def list_messages(request):
+    messages_received = Mensagem.objects.filter(receiver=request.user)
+    return render(request, 'list_messages.html', {'messages': messages_received})
+
+@login_required
+def view_message(request, message_id):
+    message = get_object_or_404(Mensagem, pk=message_id, receiver=request.user)  # Garante que só o destinatário possa ver a mensagem
+    return render(request, 'view_message.html', {'message': message})

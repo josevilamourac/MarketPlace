@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 class Loja(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='loja')
     nome = models.CharField(default="Sem Nome", max_length=50)
@@ -10,10 +9,8 @@ class Loja(models.Model):
     descricao = models.TextField()
     imagem = models.ImageField(upload_to='images/', null=True, blank=True)  # Campo de imagem do produto
 
-
-    def _str_(self):
+    def __str__(self):
         return self.user.username
-
 
 class Product(models.Model):
     nome = models.CharField(max_length=100)
@@ -22,37 +19,34 @@ class Product(models.Model):
     quantidade = models.DecimalField(max_digits=10, decimal_places=0)
     loja = models.ForeignKey(Loja, on_delete=models.CASCADE, related_name='products')
 
-    def _str_(self):
+    def __str__(self):
         return self.nome
-
 
 class UserPerfil(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     telefone = models.CharField(max_length=15)
-    messages_sent = models.ManyToManyField('Messagem', related_name='senders')
-    messages_received = models.ManyToManyField('Messagem', related_name='receivers')
-    products_bought = models.ManyToManyField(Product, related_name='buyers')
-    is_manager = models.BooleanField(default=False)  # Adicionando campo para representar se é um gerente
-    is_admin = models.BooleanField(default=False)  # Adicionando campo para representar se é um gerente
+    messages_sent = models.ManyToManyField('Mensagem', related_name='senders')
+    messages_received = models.ManyToManyField('Mensagem', related_name='receivers')
+    products_bought = models.ManyToManyField('Product', related_name='buyers')
+    is_manager = models.BooleanField(default=False)  # Campo para representar se é um gerente
+    is_admin = models.BooleanField(default=False)  # Campo para representar se é um administrador
 
-    def _str_(self):
+    def __str__(self):
         return self.user.username
-
 
 class Admin(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     telefone = models.CharField(max_length=15)
 
-    def _str_(self):
+    def __str__(self):
         return self.user.username
 
-
-class Messagem(models.Model):
+class Mensagem(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
     subject = models.CharField(max_length=100)
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
-    def _str_(self):
-        return f"{self.sender} -> {self.receiver}: {self.subject}"
+    def __str__(self):
+        return f"{self.sender.username} -> {self.receiver.username}: {self.subject}"

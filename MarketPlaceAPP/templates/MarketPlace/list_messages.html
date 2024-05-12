@@ -1,0 +1,12 @@
+{% extends './index.html' %}
+{% block content %}
+<ul>
+    {% for message in messages %}
+    <li>
+        <a href="{% url 'view_message' message.id %}">{{ message.subject }}</a> from {{ message.sender.username }}
+    </li>
+    {% empty %}
+    <li>No messages.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

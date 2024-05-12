@@ -1,6 +1,8 @@
 from django.urls import include, path
 from django.contrib import admin
 from . import views
+from django.urls import path
+from .views import send_message, list_messages, view_message
 
 
 app_name = 'MarketPlaceAPP'
@@ -23,5 +25,9 @@ urlpatterns = [
     path('registo_admin/', views.registo_admin, name='registo_admin'),
     path('registo_loja/', views.registo_loja, name='registo_loja'),
     path('remover_loja/<int:loja_id>/', views.remover_loja, name='remover_loja'),
+    path('send_message/', send_message, name='send_message'),
+    path('messages/', list_messages, name='list_messages'),
+    path('messages/<int:message_id>/', view_message, name='view_message'),
+
 
 ]
