@@ -1,5 +1,102 @@
 {% extends "./index.html" %}
+{% block header %}
+    {% if request.user.is_authenticated %}
+        {% if request.user == user_loja or request.user.is_staff %}
+            <header class="py-5">
+        <div class="container px-lg-5">
+            <div class="p-4 p-lg-5 bg-light rounded-3 text-center">
+                <div class="m-4 m-lg-5">
 
+                    <header class="bg-dark py-5">
+
+                        <div class="container px-4 px-lg-5 my-5">
+                            <div class="text-center text-white">
+                                <h1 class="display-4 fw-bolder">Loja {{ store_id }}</h1>
+                                <p class="lead fw-normal text-white-50 mb-0">Loja {{ descricao_loja }}</p>
+                                <a href="{% url 'marketplace:add_product' store_id %}" class="btn btn-primary">Adicionar Produto</a>
+                                                <a class="btn bg-primary bg-gradient btn-sm" href="{% url 'marketplace:home'%}">Voltar atras</a>
+
+                                {% if mens %}
+                                    {{ mens }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </header>
+                </div>
+            </div>
+        </div>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </header>
+
+        {% else %}
+ <header class="py-5">
+        <div class="container px-lg-5">
+            <div class="p-4 p-lg-5 bg-light rounded-3 text-center">
+                <div class="m-4 m-lg-5">
+
+                    <header class="bg-dark py-5">
+
+                        <div class="container px-4 px-lg-5 my-5">
+                            <div class="text-center text-white">
+                                <h1 class="display-4 fw-bolder">Loja {{ store_id }}</h1>
+                                <p class="lead fw-normal text-white-50 mb-0">Loja {{ descricao_loja }}</p>
+                                {% if mens %}
+                                    {{ mens }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </header>
+                </div>
+            </div>
+        </div>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </header>
+            {% endif %}
+    {% else %}
+        <header class="py-5">
+                <div class="container px-lg-5">
+                    <div class="p-4 p-lg-5 bg-light rounded-3 text-center">
+                        <div class="m-4 m-lg-5">
+
+                            <header class="bg-dark py-5">
+
+                                <div class="container px-4 px-lg-5 my-5">
+                                    <div class="text-center text-white">
+                                        <h1 class="display-4 fw-bolder">Loja {{ store_id }}</h1>
+                                        <p class="lead fw-normal text-white-50 mb-0">Loja {{ descricao_loja }}</p>
+                                                                                    <a class="btn bg-primary bg-gradient btn-sm" href="{% url 'marketplace:home'%}">Voltar atras</a>
+
+                                        {% if mens %}
+                                            {{ mens }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-success" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+        </header>
+        {% endif %}
+
+{% endblock %}
 {% block nav %}
     <li class="nav-item"><a class="nav-link" href="{% url 'MarketPlaceAPP:carrinho' %}">Carrinho</a></li>
     <li class="nav-item dropdown">
@@ -15,39 +112,15 @@
     </li>
 
 {% endblock %}
-
-{% block header %}
-    <header class="py-5">
-        <div class="container px-lg-5">
-            <div class="p-4 p-lg-5 bg-light rounded-3 text-center">
-                <div class="m-4 m-lg-5">
-
-                    <header class="bg-dark py-5">
-
-                        <div class="container px-4 px-lg-5 my-5">
-                            <div class="text-center text-white">
-                                <h1 class="display-4 fw-bolder">Loja {{ store_id }}</h1>
-                                <p class="lead fw-normal text-white-50 mb-0">Loja {{ descricao_loja }}</p>
-                                <a href="{% url 'marketplace:add_product' store_id %}" class="btn btn-primary">Adicionar Produto</a>
-                                {% if mens %}
-                                    {{ mens }}
-                                {% endif %}
-                            </div>
-                        </div>
-                </div>
-            </div>
-        </div>
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-success" role="alert">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    </header>
-{% endblock %}
-
 {% block body %}
+{% if request.user.is_authenticated %}
+{% if request.user == user_loja or request.user.is_staff %}
+        <!-- Conteúdo disponível apenas para usuários associados a esta loja -->
+
+
+
+
+
     <!-- Section-->
     <div class="container px-4 px-lg-5 mt-5">
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" id="product-container">
@@ -64,6 +137,7 @@
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                             <div class="text-center">
                                 <a class="btn btn-outline-dark mt-auto" href="#">Adicionar ao Carrinho</a>
+
                                 <a  class="btn btn-outline-dark mt-auto" href="{% url 'marketplace:remove_produto' store_id=store_id product_id=produto.id %}">Remover Produto</a>
 
                             </div>
@@ -74,7 +148,68 @@
         </div>
     </div>
 
-    <script>
+        {% else %}
+  <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" id="product-container">
+            {% for produto in produtos_da_loja %}
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="{{ produto.imagem.url }}" alt="Imagem do Produto">
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h5 class="fw-bolder">{{ produto.nome }}</h5>
+                                <span class="fw-bold">€{{ produto.preco }}</span>
+                            </div>
+                        </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center">
+                                <a class="btn btn-outline-dark mt-auto" href="#">Adicionar ao Carrinho</a>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+        {% endif %}
+
+{% else %}
+
+
+
+    <!-- Section-->
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" id="product-container">
+            {% for produto in produtos_da_loja %}
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="{{ produto.imagem.url }}" alt="Imagem do Produto">
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h5 class="fw-bolder">{{ produto.nome }}</h5>
+                                <span class="fw-bold">€{{ produto.preco }}</span>
+                            </div>
+                        </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center">
+                                <a class="btn btn-outline-dark mt-auto" href="#">Adicionar ao Carrinho</a>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+
+{% endif %}
+<script>
         document.addEventListener("DOMContentLoaded", function () {
             const produtos = JSON.parse('{{ produtos_da_loja|escapejs }}');
             console.log(produtos); // Verifique no console se os produtos estão sendo carregados corretamente
@@ -111,3 +246,10 @@
         });
     </script>
 {% endblock %}
+
+
+
+
+
+
+
