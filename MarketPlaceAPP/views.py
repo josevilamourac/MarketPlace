@@ -25,7 +25,7 @@ from .models import Loja, Product
 
 
 def index(request):
-    return home(request)
+    return HttpResponse("Pagina de entrada da app votacao.")
 
 
 def home(request):
