@@ -2,11 +2,11 @@
 
 {% block header %}
     <div class="container px-lg-5">
-    <div class="card bg-light border-0 h-100 p-4">
-<form method="post" enctype="multipart/form-data" action="{% url 'marketplace:registo_user' %}">
-            {% csrf_token %}
+        <div class="card bg-light border-0 h-100 p-4">
+            <form method="post" enctype="multipart/form-data" action="{% url 'marketplace:registo_user' %}">
+                {% csrf_token %}
 
-      <div class="form-group">
+                <div class="form-group">
                     <label for="id_username">Username:</label>
                     <input type="text" name="username" id="id_username" class="form-control" required>
                 </div>
@@ -22,10 +22,10 @@
                     <label for="id_email">Email:</label>
                     <input type="email" name="email" id="id_email" class="form-control" required>
                 </div>
-            <button type="submit" class="btn btn-primary">Registar User</button>
+                <button type="submit" class="btn btn-primary">Registar User</button>
 
 
-        </form>
-</div>
-</div>
-{%endblock%}
+            </form>
+        </div>
+    </div>
+{% endblock %}
