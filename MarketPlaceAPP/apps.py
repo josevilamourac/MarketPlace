@@ -6,3 +6,5 @@ class MarketPlaceAPPConfig(AppConfig):
     name = 'MarketPlaceAPP'
 
 
+def ready(self):
+    import MarketPlaceAPP.signals

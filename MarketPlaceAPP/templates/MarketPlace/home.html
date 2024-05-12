@@ -15,7 +15,7 @@
             {% endfor %}
     {% endif %}
 
-            {% if user.userperfil.is_manager %}
+            {% if user.userperfil.is_manager or request.user.is_staff  %}
                 {% if not user.loja_set.exists %} <!-- Verifica se não há nenhuma loja associada ao usuário -->
 
                     <a href="{% url 'marketplace:registo_loja' %}" class="btn btn-primary">Registar Loja</a>
@@ -24,7 +24,7 @@
 
         {% for loja in lojas %}
 
-            {% if request.user == loja.user %}
+{% if request.user == loja.user or request.user.is_staff %}
 
                   <div class="col-lg-6 col-xxl-4 mb-5">
             <div class="card bg-light border-0 h-100">
@@ -37,6 +37,7 @@
                         <div class="feature  text-white rounded-3 mb-4 mt-n4">
                             <button type="submit" class="btn bg-primary bg-gradient btn-sm">Ver</button>
                     <a class="btn bg-primary bg-gradient btn-sm" href="{% url 'marketplace:remover_loja' loja_id=loja.id %}">Remover Loja</a>
+
 
                         </div>
                     </form>
