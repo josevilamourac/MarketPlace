@@ -1,5 +1,8 @@
+from django.conf.urls.static import static
 from django.urls import include, path
 from django.contrib import admin
+
+from MarketPlace import settings
 from . import views
 
 
@@ -9,6 +12,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.index, name="index"),
     path('home/', views.home, name='home'),
+    path('home/<int:saldo>/', views.home, name='home_with_balance'),  # URL da home com saldo opcional
+
     path('login/', views.login_user, name='login'),
     path('contact/', views.contact, name='contact'),
     path('perfil/', views.perfil, name='perfil'),
@@ -26,5 +31,6 @@ urlpatterns = [
     path('adicionar_carrinho/<int:produto_id>/', views.adicionar_ao_carrinho, name='adicionar_carrinho'),
     path('carrinho/remover/<int:item_id>/', views.remover_item_carrinho, name='remover_item_carrinho'),
     path('comprar/', views.comprar, name='comprar'),
+    path('mostrar_saldo/', views.mostrar_saldo, name='mostrar_saldo'),
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -4,7 +4,7 @@
     <div class="container px-lg-5">
     <div class="card bg-light border-0 h-100 p-4">
 <form method="post" enctype="multipart/form-data" action="{% url 'marketplace:registo_user' %}">
-            {% csrf_token %}
+    {% csrf_token %}
 
       <div class="form-group">
                     <label for="id_username">Username:</label>

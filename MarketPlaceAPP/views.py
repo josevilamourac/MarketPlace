@@ -6,33 +6,27 @@ from decimal import Decimal
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden, Http404
-from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 import os
 from django.contrib.auth import logout as auth_logout
-from django.shortcuts import redirect
-from django.shortcuts import redirect
 from django.http import HttpResponse
-from django.shortcuts import render
 from django.contrib.auth import authenticate, login
-from .forms import UserForm, UserRegistoForm, AdminForm, LojaForm
 
 
-from .forms import ProductForm
-from .models import Loja, UserPerfil, ShoppingCart, Compra
+from .models import Loja, UserPerfil, ShoppingCart, Compra, Product
 
 from MarketPlace import settings
-from .models import Loja, Product
 
 
 def index(request):
     return HttpResponse("Pagina de entrada da app votacao.")
 
 
-def home(request):
+def home(request,saldo=None):
     lojas = Loja.objects.all()  # Recupera todos os objetos de loja do banco de dados
-    return render(request, 'MarketPlace/home.html', {'lojas': lojas})
+    saldo = saldo
+    return render(request, 'MarketPlace/home.html', {'lojas': lojas,'saldo':saldo})
 
 
 
@@ -176,6 +170,7 @@ def remove_product(request, store_id, product_id):
     return HttpResponseRedirect(reverse('marketplace:loja', args=[store_id]))
 def registo_user(request):
     if request.method == 'POST':
+
         # Obtenha os dados do formulário do request.POST
         username = request.POST.get('username')
         password1 = request.POST.get('password1')
@@ -207,6 +202,8 @@ def registo_user(request):
         return redirect('marketplace:home')
 
     else:
+        messages.success(request, 'Erro!.')
+
         # Se o método for GET, exiba o formulário vazio
         return render(request, 'MarketPlace/registo_user.html')
 
@@ -422,3 +419,16 @@ def comprar(request):
             return redirect('marketplace:carrinho')  # Redireciona de volta para o carrinho se o saldo for insuficiente
 
     return render(request, 'MarketPlace/carrinho.html')  # Retorne o render do template se a requisição não for POST
+def mostrar_saldo(request):
+    # Obtenha o perfil do usuário logado
+    perfil_usuario = UserPerfil.objects.get(user=request.user)
+
+    # Obtenha o saldo do perfil do usuário
+    saldo = perfil_usuario.saldo
+
+    # Renderize o template e passe o saldo como contexto
+    return redirect('marketplace:home_with_balance', saldo=saldo)
+
+def loja_image_upload_to(instance, filename):
+    return f'loja_images/{instance.id}/{filename}'
+

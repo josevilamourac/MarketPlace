@@ -1,8 +1,18 @@
 {% extends "./index.html" %}
 
 {% block body %}
+
+
 {% if request.user.is_authenticated %}
 
+              <form method="post" action="{% url 'marketplace:mostrar_saldo' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Verificar Saldo</button>
+                            </form>
+                            {% if saldo %}
+                                <p>Seu saldo é: {{ saldo }}</p>
+
+                            {% endif %}
     <div class="container px-lg-5">
 
     <!-- Page Features-->
@@ -14,6 +24,7 @@
                 </div>
             {% endfor %}
     {% endif %}
+
 
             {% if user.userperfil.is_manager or request.user.is_staff  %}
                 {% if not user.loja_set.exists %} <!-- Verifica se não há nenhuma loja associada ao usuário -->
